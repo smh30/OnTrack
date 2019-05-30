@@ -1,0 +1,12 @@
+#bounds {
+    height: 100px;
+    width: 80%;
+    margin: auto;
+    background-color: lightblue;
+}
+
+#completed-bar {
+    height: 10px;
+    width: 100%;
+    background-color: pink;
+}
