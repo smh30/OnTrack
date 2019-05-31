@@ -6,7 +6,23 @@
 }
 
 #completed-bar {
-    height: 10px;
+    height: 15px;
     width: 100%;
     background-color: pink;
+
+}
+
+#percentage-marks {
+    height: 40px;
+    width: 100%;
+    background-color: aliceblue;
+}
+/* svg {
+    outline: 1px solid red;
+} */
+
+#grade-bar {
+    height: 85px;
+    width: 100%;
+    background-color: lightgray;
 }
