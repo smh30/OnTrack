@@ -59,7 +59,7 @@ for (let i = 0; i < JSONtest.compx532.length; i++) {
         rect.setAttribute("fill", colours[i]);
         rect.setAttribute("data-color", colours[i]);
         rect.addEventListener("mouseover", makeDarker);
-            rect.addEventListener("mouseout", setBackColor);
+        rect.addEventListener("mouseout", setBackColor);
         cb.appendChild(rect);
         filledTop += JSONtest.compx532[i].worth;
 
@@ -72,7 +72,7 @@ for (let i = 0; i < JSONtest.compx532.length; i++) {
         grade.setAttribute("fill", LightenDarkenColor(colours[i], 20));
         grade.setAttribute("data-color", LightenDarkenColor(colours[i], 20));
         grade.addEventListener("mouseover", makeLighter);
-            grade.addEventListener("mouseout", setBackColor);
+        grade.addEventListener("mouseout", setBackColor);
         gb.appendChild(grade);
         filledBottom += JSONtest.compx532[i].worth;
 
@@ -89,7 +89,7 @@ for (let i = 0; i < JSONtest.compx532.length; i++) {
         var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
         var tip = document.createElementNS("http://www.w3.org/2000/svg", "title");
         tip.innerHTML = JSONtest.compx532[i].name;
-        
+
         rect.setAttribute("width", JSONtest.compx532[i].worth + "%");
         rect.setAttribute("height", "15px");
         rect.setAttribute("x", filledTop + "%");
@@ -97,8 +97,8 @@ for (let i = 0; i < JSONtest.compx532.length; i++) {
         rect.setAttribute("fill", colours[i]);
         rect.setAttribute("data-color", colours[i]);
         rect.addEventListener("mouseover", makeDarker);
-            rect.addEventListener("mouseout", setBackColor);
-            rect.appendChild(tip);
+        rect.addEventListener("mouseout", setBackColor);
+        rect.appendChild(tip);
         cb.appendChild(rect);
         filledTop += JSONtest.compx532[i].worth;
 
@@ -118,7 +118,7 @@ for (let i = 0; i < JSONtest.compx532.length; i++) {
 
             //take the lost marks out of the possible total
             lost += JSONtest.compx532[i].worth - contribution;
-            
+
         }
     }
 }
@@ -138,7 +138,7 @@ function makeDarker() {
 function setBackColor() {
     var segment = this;
     segment.setAttribute("fill", segment.getAttribute("data-color"));
-    
+
 }
 
 
@@ -183,18 +183,62 @@ function LightenDarkenColor(col, amt) {
 
 }
 
-document.getElementById("btn").addEventListener("click", function(){
-var name= document.getElementById("name").value;
-console.log("entered name: " +name);
+document.getElementById("btn").addEventListener("click", function () {
+    var name = document.getElementById("name").value;
+    console.log("entered name: " + name);
 });
 
-document.getElementById("add-grade").addEventListener("click", function(){
+document.getElementById("add-grade").addEventListener("click", function () {
     //get the couse code of the associateed course and then:
-//attach to the parent div, uder the svg...
+    //attach to the parent div, uder the svg...
+    //console.log("cliicked add-greade button");
+    const courseDiv = document.getElementsByTagName("body")[0];
+    const table = document.createElement("table");
 
-const courseDiv = document.getElementsByClassName("body")[0];
-const table = document.createElement("table");
-const tableHead = document.createElement("thead");
+    const tableHead = document.createElement("thead");
+    for (x of ['title', 'worth', 'submitted', 'grade']) {
+        // add iin "assumee" for particiipation grades??
+        var headCell = document.createElement("td");
+        var headText = document.createTextNode(x);
+        headCell.appendChild(headText);
+        tableHead.appendChild(headCell);
+    }
+    table.appendChild(tableHead);
 
+    for (x in JSONtest.compx532) {
+        console.log("the x in the json: " + x);
+        var row = document.createElement("tr");
+        // for (y in JSONtest.compx532[x]){
+        //     var cell=document.createElement("td");
+        //     var text= document.createTextNode(JSONtest.compx532[x][y]);
+        //     cell.appendChild(text);
+        //     row.appendChild(cell);
+        // }
+        for (y of ['name', 'worth', 'submitted', 'grade']) {
+            //todo if submiitted ==false, add button
+            
+            //TODO something about the ones which are participation type
+            var cell = document.createElement("td");
+            if (y === 'grade' && JSONtest.compx532[x][y] === null) {
+                var button = document.createElement("button");
+                button.setAttribute("value", "add result");
+                button.setAttribute("type", "button");
+                var text = document.createTextNode("add result");
+                button.appendChild(text);
+                //todo give ths button a function
+                cell.appendChild(button);
+            } else {
+
+                var text = document.createTextNode(JSONtest.compx532[x][y]);
+                cell.appendChild(text);
+
+            }
+            row.appendChild(cell);
+        }
+        table.appendChild(row);
+    }
+
+
+    courseDiv.appendChild(table);
 
 })
