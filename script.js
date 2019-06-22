@@ -208,16 +208,11 @@ document.getElementById("add-grade").addEventListener("click", function () {
     for (x in JSONtest.compx532) {
         console.log("the x in the json: " + x);
         var row = document.createElement("tr");
-        // for (y in JSONtest.compx532[x]){
-        //     var cell=document.createElement("td");
-        //     var text= document.createTextNode(JSONtest.compx532[x][y]);
-        //     cell.appendChild(text);
-        //     row.appendChild(cell);
-        // }
+
         for (y of ['name', 'worth', 'submitted', 'grade']) {
-            //todo if submiitted ==false, add button
-            
-            //TODO something about the ones which are participation type
+
+
+
             var cell = document.createElement("td");
             if (y === 'grade' && JSONtest.compx532[x][y] === null) {
                 var button = document.createElement("button");
@@ -227,7 +222,21 @@ document.getElementById("add-grade").addEventListener("click", function () {
                 button.appendChild(text);
                 //todo give ths button a function
                 cell.appendChild(button);
-            } else {
+            } else if (y === 'submitted' && JSONtest.compx532[x][y] === false) {
+
+                var button = document.createElement("button");
+                button.setAttribute("value", "toggle submit");
+                button.setAttribute("type", "button");
+                var text = document.createTextNode("false");
+                button.appendChild(text);
+                //todo give ths button a function
+                cell.appendChild(button);
+            } else if (y === 'submitted' && JSONtest.compx532[x].assume === true) {
+                var text = document.createTextNode("auto");
+                cell.appendChild(text);
+            }
+
+            else {
 
                 var text = document.createTextNode(JSONtest.compx532[x][y]);
                 cell.appendChild(text);
@@ -242,3 +251,5 @@ document.getElementById("add-grade").addEventListener("click", function () {
     courseDiv.appendChild(table);
 
 })
+
+//TODO make it so when adding an auto/partticipatiion, the grade automattically is 100.
