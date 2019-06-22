@@ -19,7 +19,7 @@ var JSONtest = {
         {
             "name": "assg3",
             "worth": 10,
-            "grade": 67,
+            "grade": 100,
             "submitted": true
         },
         {
@@ -57,6 +57,9 @@ for (let i = 0; i < JSONtest.compx532.length; i++) {
         //rect.setAttribute("y", "-2");
         rect.setAttribute("stroke", "grey");
         rect.setAttribute("fill", colours[i]);
+        rect.setAttribute("data-color", colours[i]);
+        rect.addEventListener("mouseover", makeDarker);
+            rect.addEventListener("mouseout", setBackColor);
         cb.appendChild(rect);
         filledTop += JSONtest.compx532[i].worth;
 
@@ -66,7 +69,10 @@ for (let i = 0; i < JSONtest.compx532.length; i++) {
         grade.setAttribute("height", "90px");
         grade.setAttribute("x", filledBottom + "%");
         grade.setAttribute("stroke", "grey");
-        grade.setAttribute("fill", LightenDarkenColor(colours[i], 50));
+        grade.setAttribute("fill", LightenDarkenColor(colours[i], 20));
+        grade.setAttribute("data-color", LightenDarkenColor(colours[i], 20));
+        grade.addEventListener("mouseover", makeLighter);
+            grade.addEventListener("mouseout", setBackColor);
         gb.appendChild(grade);
         filledBottom += JSONtest.compx532[i].worth;
 
@@ -79,51 +85,72 @@ console.log("number of assgs" + JSONtest.compx532.length);
 
 for (let i = 0; i < JSONtest.compx532.length; i++) {
     if (JSONtest.compx532[i].name !== "participation") {
-    
-    var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    rect.setAttribute("width", JSONtest.compx532[i].worth + "%");
-    rect.setAttribute("height", "15px");
-    rect.setAttribute("x", filledTop + "%");
-    //rect.setAttribute("y", "-2");
-    rect.setAttribute("stroke", "grey");
-    rect.setAttribute("fill", colours[i]);
-    cb.appendChild(rect);
-    filledTop += JSONtest.compx532[i].worth;
 
-    if (JSONtest.compx532[i].grade != null) {
-        var grade = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-        var contribution = JSONtest.compx532[i].grade / 100 * JSONtest.compx532[i].worth;
-        grade.setAttribute("width", contribution + "%");
-        grade.setAttribute("height", "90px");
-        grade.setAttribute("x", filledBottom + "%");
-        grade.setAttribute("stroke", "grey");
-        grade.setAttribute("fill", LightenDarkenColor(colours[i], 80));
-        gb.appendChild(grade);
-        filledBottom += contribution;
+        var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        var tip = document.createElementNS("http://www.w3.org/2000/svg", "title");
+        tip.innerHTML = JSONtest.compx532[i].name;
+        
+        rect.setAttribute("width", JSONtest.compx532[i].worth + "%");
+        rect.setAttribute("height", "15px");
+        rect.setAttribute("x", filledTop + "%");
+        rect.setAttribute("stroke", "grey");
+        rect.setAttribute("fill", colours[i]);
+        rect.setAttribute("data-color", colours[i]);
+        rect.addEventListener("mouseover", makeDarker);
+            rect.addEventListener("mouseout", setBackColor);
+            rect.appendChild(tip);
+        cb.appendChild(rect);
+        filledTop += JSONtest.compx532[i].worth;
 
-        //take the lost marks out of the possible total
-lost += JSONtest.compx532[i].worth - contribution;
-console.log("percents lost so far: " + lost);
-    }
+        if (JSONtest.compx532[i].grade != null) {
+            var grade = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            var contribution = JSONtest.compx532[i].grade / 100 * JSONtest.compx532[i].worth;
+            grade.setAttribute("width", contribution + "%");
+            grade.setAttribute("height", "90px");
+            grade.setAttribute("x", filledBottom + "%");
+            grade.setAttribute("stroke", "grey");
+            grade.setAttribute("fill", LightenDarkenColor(colours[i], 20));
+            grade.setAttribute("data-color", LightenDarkenColor(colours[i], 20));
+            grade.addEventListener("mouseover", makeLighter);
+            grade.addEventListener("mouseout", setBackColor);
+            gb.appendChild(grade);
+            filledBottom += contribution;
+
+            //take the lost marks out of the possible total
+            lost += JSONtest.compx532[i].worth - contribution;
+            
+        }
     }
 }
+
+function makeLighter() {
+    var segment = this;
+
+    segment.setAttribute("fill", LightenDarkenColor(segment.getAttribute("data-color"), 40));
+}
+
+function makeDarker() {
+    var segment = this;
+
+    segment.setAttribute("fill", LightenDarkenColor(segment.getAttribute("data-color"), -10));
+}
+
+function setBackColor() {
+    var segment = this;
+    segment.setAttribute("fill", segment.getAttribute("data-color"));
+    
+}
+
 
 var lostRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
 lostRect.setAttribute("width", lost + "%");
 lostRect.setAttribute("height", "90px");
-lostRect.setAttribute("x", 100-lost + "%");
+lostRect.setAttribute("x", 100 - lost + "%");
 lostRect.setAttribute("stroke", "grey");
 lostRect.setAttribute("fill", "grey");
 gb.appendChild(lostRect);
 
-var pm = document.getElementById("pm");
-for (let i=0; i<gpa.length; i++){
-var tri = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-tri.setAttribute("points", "10,0 20,20 0,20" );
-tri.setAttribute("fill", "orange");
-pm.appendChild(tri);
-}
-{/* <polygon points="10,0 20,20 0,20" fill="orange"></polygon> */}
+
 
 //https://css-tricks.com/snippets/javascript/lighten-darken-color/
 function LightenDarkenColor(col, amt) {
@@ -155,3 +182,19 @@ function LightenDarkenColor(col, amt) {
     return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16);
 
 }
+
+document.getElementById("btn").addEventListener("click", function(){
+var name= document.getElementById("name").value;
+console.log("entered name: " +name);
+});
+
+document.getElementById("add-grade").addEventListener("click", function(){
+    //get the couse code of the associateed course and then:
+//attach to the parent div, uder the svg...
+
+const courseDiv = document.getElementsByClassName("body")[0];
+const table = document.createElement("table");
+const tableHead = document.createElement("thead");
+
+
+})
